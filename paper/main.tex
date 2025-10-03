@@ -1,158 +1,72 @@
 \documentclass{article}
-\usepackage{arxiv}
+\usepackage{graphicx} % Required for inserting images
 
-\usepackage[utf8]{inputenc}
-\usepackage[english, russian]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{url}
-\usepackage{booktabs}
-\usepackage{amsfonts}
-\usepackage{nicefrac}
-\usepackage{microtype}
-\usepackage{lipsum}
-\usepackage{graphicx}
-\usepackage{natbib}
-\usepackage{doi}
-
-
-
-\title{A template for the \emph{arxiv} style}
-
-\author{ David S.~Hippocampus\thanks{Use footnote for providing further
-		information about author (webpage, alternative
-		address)---\emph{not} for acknowledging funding agencies.} \\
-	Department of Computer Science\\
-	Cranberry-Lemon University\\
-	Pittsburgh, PA 15213 \\
-	\texttt{hippo@cs.cranberry-lemon.edu} \\
-	%% examples of more authors
-	\And
-	Elias D.~Striatum \\
-	Department of Electrical Engineering\\
-	Mount-Sheikh University\\
-	Santa Narimana, Levand \\
-	\texttt{stariate@ee.mount-sheikh.edu} \\
-	%% \AND
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-}
-\date{}
-
-\renewcommand{\shorttitle}{\textit{arXiv} Template}
-
-%%% Add PDF metadata to help others organize their library
-%%% Once the PDF is generated, you can check the metadata with
-%%% $ pdfinfo template.pdf
+\title{Анализ дактилоскопических изображений на основе непрерывной скелетизации}
+\author{ Семенов Артём Григорьевич\\
+	Московский государственный университет имени М. В. Ломоносова \\
+        Научный руководитель: Местецкий Леонид Моисеевич \\ }
+\date{October 2025}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{hyperref}
 \hypersetup{
-pdftitle={A template for the arxiv style},
-pdfsubject={q-bio.NC, q-bio.QM},
-pdfauthor={David S.~Hippocampus, Elias D.~Striatum},
-pdfkeywords={First keyword, Second keyword, More},
-}
-
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools, esint, eucal}
 \begin{document}
+
 \maketitle
 
-\begin{abstract}
-	\lipsum[1]
-\end{abstract}
+\section{Введение}
+Задачи, связанные с идентификацией дактилоскопического изображения, или отпечатка пальца, могут возникать в разных ситуациях: доступ к закрытым местам, установление личности, определение хозяина отпечатка. Данная задача является нетривиальной и её эффективное решение может быть полезно. \\
+К обработке отпечатка существуют принципиально различные основные подходы. Часть алгоритмов рассматривают отпечаток как целостный образ, и сравнивают его с другими, измеряя некоторым образом их близость. Очевидно, такой метод удобен для сравнения пары отпечатков, но при достаточной сложности алгоритмов его обобщение на сравнение исходного отпечатка с набором других может не являться оптимальным. Другим распространенным способом является выделение на отпечатке признаков, в частности минюций, и далее сравнение основывается на их сопоставлении признакам образцов. Кроме основных подходов, существуют решения с помощью нейронных сетей. \\
+Среди проблем имеющихся алгоритмов можно выделить неустойчивость и низкую скорость работы. При попытке идентифицировать отпечаток, взятый под углом или взятый нечетко из-за сканера или прикладывания, результат идентификации может отличаться от результата при корректном взятии. Большинство алгоритмов выдают приемлемую скорость обработки при небольших базах образцов, но при их увеличении могут возникнуть проблемы. Также, алгоритм может не заметить различий между отпечаками, посчитав их несущественными, и неверно отождествить их. \\
+Предлагается рассмотреть папиллярный узор как граф, и далее анализировать его. Для получения графа строится скелет фигуры, соответствующей изображениям папиллярных линий. Они являются достаточно тонкими, и пострение скелета сохранит важную для идентификации информацию. Интерес для анализа представляют семейства линий, близких друг другу, и позволяющих выделеть на отпечатке полезные признаки.
 
 
-\keywords{First keyword \and Second keyword \and More}
-
-\section{Introduction}
-\lipsum[2]
-\lipsum[3]
-
-\section{Headings: first level}
-\label{sec:headings}
-
-\lipsum[4] See Section \ref{sec:headings}.
-
-\subsection{Headings: second level}
-\lipsum[5]
-\begin{equation}
-	\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\end{equation}
-
-\subsubsection{Headings: third level}
-\lipsum[6]
-
-\paragraph{Paragraph}
-\lipsum[7]
-
-
-
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
-
-\subsection{Citations}
-Citations use \verb+natbib+. The documentation may be found at
-\begin{center}
-	\url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-
-Here is an example usage of the two main commands (\verb+citet+ and \verb+citep+): Some people thought a thing \citep{kour2014real, hadash2018estimate} but other people thought something else \citep{kour2014fast}. Many people have speculated that if we knew exactly why \citet{kour2014fast} thought this\dots
-
-\subsection{Figures}
-\lipsum[10]
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11]
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{../figures/log_reg_cs_exp.eps}
-	\caption{Sample figure caption.}
-	\label{fig:fig1}
-\end{figure}
-
-\subsection{Tables}
-See awesome Table~\ref{tab:table}.
-
-The documentation for \verb+booktabs+ (`Publication quality tables in LaTeX') is available from:
-\begin{center}
-	\url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-
-\begin{table}
-	\caption{Sample table title}
-	\centering
-	\begin{tabular}{lll}
-		\toprule
-		\multicolumn{2}{c}{Part}                   \\
-		\cmidrule(r){1-2}
-		Name     & Description     & Size ($\mu$m) \\
-		\midrule
-		Dendrite & Input terminal  & $\sim$100     \\
-		Axon     & Output terminal & $\sim$10      \\
-		Soma     & Cell body       & up to $10^6$  \\
-		\bottomrule
-	\end{tabular}
-	\label{tab:table}
-\end{table}
-
-\subsection{Lists}
-\begin{itemize}
-	\item Lorem ipsum dolor sit amet
-	\item consectetur adipiscing elit.
-	\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
-
-
-\bibliographystyle{unsrtnat}
-\bibliography{references}
+\section{Литературный обзор} 
+Графовые подходы \\
+\begin{enumerate}
+     \item \href{https://elibrary.ru/download/elibrary_17421420_21592996.pdf}{Разработка алгоритма идентификации личности по изображению отпечатка пальца}
+     \item \href{https://elibrary.ru/download/elibrary_25727935_97678811.pdf}{Математические методы и алгоритмы обработкибиометрической информации в системах идентификации личности по отпечаткам мальцев с учетом особенности их применения во вьетнаме}
+     \item \href{https://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=ista&paperid=128&option_lang=rus}{Алгоритм сравнения отпечатков пальцев на основе поиска максимального пути в графе}
+\end{enumerate}
+Нейросетевые подходы \\
+\begin{enumerate}
+     \item \href{https://cj.bgu.ru/reader/article.aspx?id=27104}{Определение классификационного типа папиллярного узора на основе нейросетевого подхода}
+     \item \href{https://cyberleninka.ru/article/n/algoritmy-dlya-klassifikatsii-otpechatkov-paltsev-na-osnove-primeneniya-filtra-gabora-veyvletspreobrazovaniya-i-mnogosloynoy}{Алгоритм для классификации отпечатков пальццев на осове применения фильтра Габора, вейвлет-преобразования и многослойной нейронной сети}
+     \item \href{https://elibrary.ru/download/elibrary_42663680_16253640.pdf}{Методы биометрической идентиикации на основе применения нейросетевых технологий}
+\end{enumerate}
+Распределения признаков \\
+\begin{enumerate}
+     \item \href{https://www.mediasphera.ru/issues/sudebno-meditsinskaya-ekspertiza/2019/1/1003945212019011017}{Распределение основных типов папиллярных узоров на дистальных фалангах пальцев рук человека}
+     \item \href{https://elib.gsmu.by/handle/GomSMU/9062}{Распределение папиллярных узоров на пальцах рук мужчик и женщин}
+     \item \href{https://elibrary.ru/download/elibrary_38557701_42204720.pdf}{Дактилоскопия: исторические аспекты и роль в решении идентификационных задач на современном этапе её развития}
+     
+\end{enumerate}
+Получение отпечатка \\
+\begin{enumerate}
+     \item \href{https://elibrary.ru/download/elibrary_50506717_45015847.pdf}{Анализ различных материалов в классической дактилоскопии человека}
+     \item \href{https://elibrary.ru/download/elibrary_39657698_78801553.pdf}{К вопросу о модернизации дактилоскопического учета в современных условиях развития криминалистики на примере построения 3D-дактилоскопической карты}
+     \item \href{https://elibrary.ru/download/elibrary_54061151_92328469.pdf#page=87}{Идентификация по отпечатку пальца, папиллярный узор как целостный образ}
+     \item \href{https://elibrary.ru/download/elibrary_41857591_46698129.pdf}{Дактилоскопия и её особенности}
+     \item \href{https://elib.institutemvd.by/jspui/bitstream/MVD_NAM/8521/1/Yumatov%20S.%20V..pdf}{Решение диагностической задачи по признанию следа пальца руки пригодным для идентификации личности в зависимости от его качества}
+     \item \href{https://network-journal.mpei.ac.ru/ru/27/13/6/article.htm}{Методы идентификации по отпечаткам пальцев}
+\end{enumerate}
+Основные алгоритмы \\
+\begin{enumerate}
+     \item \href{https://cyberleninka.ru/article/n/algoritmy-raspoznavaniya-otpechatkov-paltsev}{Алгоритмы распознавания отпечатков пальцев}
+     \item \href{https://habr.com/ru/companies/samsung/articles/842578/}{Алгоритм сравнения отпечатков пальцев: комбинация классических алгоритмов}
+     \item \href{https://www.elibrary.ru/download/elibrary_42560367_93751199.pdf}{Методы распознавания отпечатков пальцев для аутентификации пользователя}
+     \item \href{https://elibrary.ru/download/elibrary_44466095_76421639.pdf}{Теоретические основы функционирования алгоритма кодирования частных признаков папиллярных узоров пальцев рук}
+     \item \href{https://elibrary.ru/download/elibrary_24994983_78627145.pdf}{Метод биометрической аутентификации пользователя по отпечаткам пальцев}
+     
+\end{enumerate}
 
 \end{document}
