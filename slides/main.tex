@@ -1,192 +1,185 @@
-\documentclass[10pt,pdf,hyperref={unicode}]{beamer}
-
-\mode<presentation>
-{
-\usetheme{boxes}
-\beamertemplatenavigationsymbolsempty
-
-\setbeamertemplate{footline}[page number]
-\setbeamersize{text margin left=0.5em, text margin right=0.5em}
-}
-
+\documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage{graphicx, hyperref, xcolor}
+\usepackage[warn]{mathtext}
+\usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[english, russian]{babel}
-\usepackage{bm}
-\usepackage{multirow}
-\usepackage{ragged2e}
+\usepackage[english,russian]{babel}
 \usepackage{indentfirst}
-\usepackage{multicol}
-\usepackage{subfig}
-\usepackage{amsmath,amssymb}
-\usepackage{enumerate}
-\usepackage{mathtools}
-\usepackage{comment}
-\usepackage{multicol}
-
-\usepackage[all]{xy}
-
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{booktabs}
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows}
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage{graphicx}
 
-\tikzstyle{name} = [parameters]
-\definecolor{name}{rgb}{0.5,0.5,0.5}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
 
-\usepackage{caption}
-\captionsetup{skip=0pt,belowskip=0pt}
+\title{Анализ дактилоскопических изображений на основе непрерывной скелетизации}
+\author{Семенов Артём Григорьевич}
+\institute{ВМК МГУ \\[1em] \textit{Научный руководитель}: д.т.н., Местецкий Леонид Моисеевич}
+\date{2025}
 
-\newtheorem{rustheorem}{Теорема}
-\newtheorem{russtatement}{Утверждение}
-\newtheorem{rusdefinition}{Определение}
 
-% colors
-\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
-\definecolor{darkcyan}{rgb}{0.0, 0.55, 0.55}
-
-\AtBeginEnvironment{figure}{\setcounter{subfigure}{0}}
-
-\captionsetup[subfloat]{labelformat=empty}
-
-%----------------------------------------------------------------------------------------------------------
-
-\title[Пример слайдов по работе]{Пример слайдов по работе \\ курса}
-\author{И.\,О.\,Фамилия}
-
-\institute[]{Московский физико-технический институт}
-\date[2022]{\small 10\;февраля\;2022\,г.}
-
-%---------------------------------------------------------------------------------------------------------
 \begin{document}
 
-\begin{frame}
-\titlepage
+\frame{\titlepage}
+
+\begin{frame}{Введение}
+    \begin{itemize}
+        \item Задачи, связанные с идентификацией дактилоскопического изображения, или отпечатка пальца, могут возникать в таких ситуациях, как предоставление доступа к закрытым местам, установление личности, определение хозяина отпечатка.
+        \item У имеющихся алгоритмов есть проблемы: неустойчивость и
+низкая скорость работы.
+        \item Предлагается рассмотреть подход, основанный на анализе скелетного графа изображеня.
+    \end{itemize}
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Слайд об исследованиях}
-\begin{frame}{Слайд об исследованиях}
-\bigskip
-Исследуется проблема \ldots.
-\begin{block}{Цель исследования~---}
-предложить метод \ldots.
-\end{block}
-\begin{block}{Требуется предложить}
-\justifying
-\begin{enumerate}[1)]
-\item метод \ldots,
-\item метод \ldots,
-\item метод \ldots.
-\end{enumerate}
-\end{block}
-\begin{block}{Решение}
-Для \ldots.
-\end{block}
+% --------------------
+\begin{frame}{Данные}
+    \begin{columns}[T]
+      \begin{column}{0.55\textwidth}
+      В качестве даннных использовался датасет $DB2 \_ B$ из соревнования по распознаванию отпечатков пальцев $FVC2002$. Он состоит из 80 изображений, снятых с 10 разных пальцев, ровно 8 изображений соответствуют одному. Сами изображения имеют размер 560 пикселей в высоту и 296 пикселей в ширину.
+      \end{column}
+      \begin{column}{0.4\textwidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.25]{new_image_0.png}
+            \caption{Пример изображения}
+            \label{fig:orange}
+         \end{figure}
+      \end{column}
+    \end{columns}
 \end{frame}
 
-%---------------------------------------------------------------------------------------------------------
-\section{Постановка задачи \ldots}
-\begin{frame}{Постановка задачи \ldots}
-Заданы
-\begin{enumerate}[1)]
-    \item признаки \ldots,
-    \item целевая переменная \ldots,
-    \item \ldots.
-\end{enumerate}
+% --------------------
+\begin{frame}{Постановка задачи}
+    
 
-\ldots
+    \vspace{0.5cm}
 
-\bigskip
-
-Требуется выбрать модель \ldots из множества
-\[
-	\mathfrak{G} = \left\{\mathbf{g}| \mathbf{g}:\mathbb{R}^{n} \to \mathbb{Y}^\prime\right\}.
-\]
-Оптимизационная задача \ldots:
-\[
-	\mathbf{g} = \arg\min_{\mathbf{g} \in \mathfrak{G}} \mathcal{L}\bigr(\ldots\bigr),
-\]
-где $\mathcal{L}$~--- функция ошибки.
-
-\bigskip
-\footnotetext[1]{\textit{Lopez-Paz D., Bottou L., Scholkopf B., Vapnik V.} Unifying distillation and privileged information // ICLR, 2016.}
-\footnotetext[2]{\textit{Hinton G., Vinyals O., Dean J.} Distilling the knowledge in a neural network // NIPS, 2015.}
+    \textbf{Дано:}
+    Выборки $X_{train} = \{(x_{i}, y_{i})\}_{i = 1}^{\ell}, X_{test} = \{(x_{i}^{'})\}_{i = 1}^{\ell^{'}}; x_{i}, x_{i}^{'} \in X$, где $  X = \{x: x \in \mathbb{N}_{0}^{n \times m}, x \leq 255\}, y_{i} \in Y, $ где $Y$ — конечное множество классов. $\exists f(x): X \to Y$, $\forall y \in Y \exists x_{1} \in X,  x_{2} \in X_{test}: (x_{1}, y) \in X_{train}, f(x_{2}) = y $,
+    T — время вычислений функий, зависящих от тестовой выборки, S — некоторая функция штрафа по времени.
+    
+    
+    \vspace{0.3cm}
+    
+    \textbf{Найти:}
+    Функию $g(x)$, приближающую $f(x)$, не требующую слишком много времени на вычисление.
+    
+    \vspace{0.3cm}
+    
+    \textbf{Критерий:}
+    Средняя точность классификации объектов, со штрафом по времени: $\frac{\sum_{x \in {X_{test}}}(g(x) == f(x))}{|X_{test}|} + S(T)$
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Предложенный метод \ldots}
-\begin{frame}{Предложенный метод \ldots}
-~\\[-1mm]
-Заданы
-\begin{enumerate}[1)]
-	\item \ldots,
-	\item \ldots.
-\end{enumerate}
 
-\medskip
-Параметрические семейства:
-\[
-\setlength\abovedisplayskip{0pt}
-\mathfrak{F} = \left\{\mathbf{f}| \mathbf{f} = \text{softmax}\bigr(\mathbf{v}\bigr(\mathbf{x}\bigr)/T\bigr), \quad \mathbf{v}: \mathbb{R}^{n} \to \mathbb{R}^K \right\},
-\]
-\[
-\mathfrak{G} = \left\{\mathbf{g}| \mathbf{g} = \text{softmax}\bigr(\mathbf{z}\bigr(\mathbf{x}\bigr)/T\bigr), \quad \mathbf{z}: \mathbb{R}^n \to \mathbb{R}^K \right\},
-\]
-где~\ldots.
-
-\medskip
-Функция ошибки
-\[
-\setlength\abovedisplayskip{0pt}
-\begin{aligned}
-   \mathcal{L}\bigr(\mathbf{g}\bigr) = &-\sum_{i=1}^{m}\underbrace{{\sum_{k=1}^{K}y^k_i\log\mathbf{g}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=1}}}_{\text{исходная функция потерь}}- \sum_{i=1}^{m}\underbrace{{\sum_{k=1}^{K}\mathbf{f}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=T_0}\log\mathbf{g}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=T_0}}}_{\text{слагаемое дистилляции}},
-\end{aligned}
-\setlength\belowdisplayskip{0pt}
-\]
-где~\ldots.
-
-Оптимальная модель выбирается из класса,
-$\hat{\mathbf{g}} = \arg\min\limits_{\mathbf{g} \in \mathfrak{G}_{\text{cl}}} \mathcal{L}\bigr(\mathbf{g}\bigr).$
-\end{frame}
-
-%----------------------------------------------------------------------------------------------------------
-\section{Анализ предложенного метода \ldots}
-\begin{frame}{Анализ предложенного метода \ldots}
-\justifying
-
-На графике показана зависимость значения параметров$w_i$ в зависимости от параметра~$l_1$-регуляризации~$C$.
-\begin{figure}[h!]
-\includegraphics[width=0.45\textwidth]{../figures/log_reg_cs_exp.eps}
-\includegraphics[width=0.45\textwidth]{../figures/log_reg_cs_exp.eps}
-\end{figure}
-
-С увеличением параметра регуляризации~$C$ число ненулевых параметров~$w_i$ уменьшается.
+% --------------------
+\begin{frame}{Подходы к решению}
+    Наиболее распространные подходы
+    \begin{itemize}
+        \item подходы, ориентированные на использовании минюций
+        \item неиросетевые
+        \item сравнение отпечатков как целостного образа
+        
+    \end{itemize}
+    В настоящее время, для задачи идентификации самым распространенным является подход, основанный на минюциях. Далее, в эксперименте будет протестирована одна из его реализаций.
+    
 
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Выводы}
+
+
+% --------------------
+\begin{frame}{Эксперимент}
+    Весь алгоритм состоит из нескольких шагов:
+    \begin{enumerate}
+        \item Предобработка изображения. К изображению применяются классические методы обработки, в результате этого папиллярные линии становятся более отчетливыми.  
+        \item Выделяются ключевые точки. Множество ключевых точек содержит в себе множество минюций, что используется далее.
+        \item Циклом по элементов из объектов датасета, ключевые точки идентифицируемого изображения сопоставляются ключевым точкам объекта. Среди получившихся пар отбрасываются те, чье расстояние превшает заданный порог, а число, равное количеству оставшихся пар, заносится в словарь с ключем, соответствующим идентификатору изображения.
+        \item Словарь сортируется по убыванию значения, берутся первые r элементов. Идентифицируемое изображения относят к тому классу, к которому принадлженит большинство из данных r изображений.
+        
+    \end{enumerate}
+
+
+\end{frame}
+
+% --------------------
+\begin{frame}{Эксперимент}
+    В оригинальном эксперименте можно варьировать число r самых подходящих образцов, по которым определяется принадлежность к классу, а также порог, по которому принимаются соответствия между ключевым точками.
+    Подбирая различные пороги, видно, что при низком пороге алгоритм плохо решает задачу, но с некоторого момента достигается высокая точкность. \\
+    
+    Гиперпараметр r не оказывает серьезного влияния на результат, при этом лучшие результаты достигаются при небольшом значении.
+    \begin{columns}[T]
+      \begin{column}{0.4\textwidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.24]{acc_0.pdf}
+            \caption{Зависимость точности от порога}
+            \label{fig:orange}
+         \end{figure}
+      \end{column}
+      \begin{column}{0.4\textwidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.24]{acc_1.pdf}
+            \caption{Зависимость точности от ранга r}
+            \label{fig:orange}
+         \end{figure}
+      \end{column}
+    \end{columns}
+
+\end{frame}
+
+% --------------------
+\begin{frame}{Предлагаемая модификация}
+    Несмотря на высокую точность, алгоритм имеет высокие затраты по времени.
+    Идея улучшения состоит в том, что вместо сравнения ключевых точек у идентифицируемого изображения с каждым изображением из датасета, он сравнивается по точкам ветвления папиллярных линий, которых значительно меньше, и которые ищутся в скелете, представленном в виде графа. Итоговая точность составляет 95\%, что сравнимо с качеством без данной процедуры, Время на определение близости между двумя изображениями составляет : $876 * 10^{-5}$ секунды, в то время как у оригинального алгоритма: $11689 * 10^{-6}$, то есть модификация быстрее оригинала примерно в $\frac{4}{3}$ раза.  
+    \begin{columns}[T]
+      \begin{column}{0.4\textwidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.05]{saved_image.png}
+            \caption{Предобработанное изображение с выделенными ключевыми точками}
+            \label{fig:orange}
+         \end{figure}
+      \end{column}
+      \begin{column}{0.4\textwidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.05]{skel_img.png}
+            \caption{Скелет изображения с точками ветвления}
+            \label{fig:orange}
+         \end{figure}
+      \end{column}
+    \end{columns}
+    
+
+\end{frame}
+
+% --------------------
 \begin{frame}{Выводы}
-\justifying
-	\begin{enumerate}
-	\justifying
-	    \item Предложен \ldots.
-        \item Доказаны теоремы \ldots, 
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложен метод \ldots
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложены методы \ldots
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложена вероятностная интерпретации \ldots.
-	\end{enumerate}
-\end{frame}
-%----------------------------------------------------------------------------------------------------------
+    \begin{itemize}
+        \item Показана эффективность предварительного отбора отпечатков
+        \item Получено ускорение, без ущерба для точности
+        
+    \end{itemize}
+    
 
-\end{document} 
+\end{frame}
+
+\begin{frame}{Конец}
+    \begin{center}
+        {\LARGE \textbf{Спасибо за внимание!}}
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
